@@ -25,7 +25,7 @@
 </div>
 
 
-**CatVTON** is a simple and efficient virtual try-on diffusion model with ***1) Lightweight Network (899.06M parameters totally)***, ***2) Parameter-Efficient Training (49.57M parameters trainable)*** and ***3) Simplified Inference (< 8G VRAM for 1024X768 resolution)***.
+**CatVTON** is a simple and efficient virtual try-on diffusion model with ***1) Lightweight Network (899.06M parameters totally)***, ***2) Parameter-Efficient Training (49.57M parameters trainable)*** and ***3) Simplified Inference (< 8G VRAM for 1024X768 resolution)***. This is the **stable version** of CatVTON with all dependency issues resolved and tested for smooth deployment.
 <div align="center">
   <img src="resource/img/teaser.jpg" width="100%" height="100%"/>
 </div>
