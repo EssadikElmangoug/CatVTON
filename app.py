@@ -1,3 +1,4 @@
+
 import argparse
 import os
 from datetime import datetime
@@ -18,7 +19,7 @@ def parse_args():
     parser.add_argument(
         "--base_model_path",
         type=str,
-        default="runwayml/stable-diffusion-inpainting",  # Use original runwayml model
+        default="booksforcharlie/stable-diffusion-inpainting",  # Change to a copy repo as runawayml delete original repo
         help=(
             "The path to the base model to use for evaluation. This can be a local path or a model identifier from the Model Hub."
         ),
@@ -128,14 +129,26 @@ def submit_function(
     seed,
     show_type
 ):
-    person_image, mask = person_image["background"], person_image["layers"][0]
-    mask = Image.open(mask).convert("L")
-    if len(np.unique(np.array(mask))) == 1:
+    # Handle different input formats for person_image
+    if isinstance(person_image, dict):
+        # If it's a dictionary (from JavaScript client)
+        person_image_path = person_image["background"]
         mask = None
+        
+        # Check if layers exist and have content
+        if person_image.get("layers") and len(person_image["layers"]) > 0:
+            mask = person_image["layers"][0]
+            mask = Image.open(mask).convert("L")
+            if len(np.unique(np.array(mask))) == 1:
+                mask = None
+            else:
+                mask = np.array(mask)
+                mask[mask > 0] = 255
+                mask = Image.fromarray(mask)
     else:
-        mask = np.array(mask)
-        mask[mask > 0] = 255
-        mask = Image.fromarray(mask)
+        # If it's a string (file path from Gradio UI)
+        person_image_path = person_image
+        mask = None
 
     tmp_folder = args.output_dir
     date_str = datetime.now().strftime("%Y%m%d%H%M%S")
@@ -147,7 +160,7 @@ def submit_function(
     if seed != -1:
         generator = torch.Generator(device='cuda').manual_seed(seed)
 
-    person_image = Image.open(person_image).convert("RGB")
+    person_image = Image.open(person_image_path).convert("RGB")
     cloth_image = Image.open(cloth_image).convert("RGB")
     person_image = resize_and_crop(person_image, (args.width, args.height))
     cloth_image = resize_and_padding(cloth_image, (args.width, args.height))
@@ -371,3 +384,4 @@ def app_gradio():
 
 if __name__ == "__main__":
     app_gradio()
+
