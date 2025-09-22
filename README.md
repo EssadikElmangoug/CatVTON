@@ -55,13 +55,23 @@
 
 ## Installation
 
-Create a conda environment & Install requirments
+### Quick Installation (Recommended)
+```shell
+# Make the installation script executable and run it
+chmod +x install.sh
+./install.sh
+```
+
+### Manual Installation
+Create a conda environment & Install requirements
 ```shell
 conda create -n catvton python==3.9.0
 conda activate catvton
 cd CatVTON-main  # or your path to CatVTON project dir
 pip install -r requirements.txt
 ```
+
+**Note**: This version includes all dependency fixes and is tested to work out-of-the-box without any manual package management.
 
 ## Deployment 
 ### ComfyUI Workflow
